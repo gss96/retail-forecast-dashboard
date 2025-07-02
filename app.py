@@ -7,10 +7,9 @@ st.set_page_config(page_title="Retail Sales Dashboard", layout="centered")
 
 st.title("🛍️ Retail Sales Forecasting Dashboard")
 
-# Load cleaned daily sales data
 @st.cache_data
 def load_sales_data():
-    return pd.read_csv("data/Walmart_Store_sales.csv", parse_dates=['Date'])
+    return pd.read_csv("Walmart_Store_sales.csv", parse_dates=['Date'])
 
 @st.cache_data
 def load_forecast():
@@ -19,13 +18,11 @@ def load_forecast():
 sales_df = load_sales_data()
 forecast_df = load_forecast()
 
-# Revenue Trend
 st.subheader("📈 Daily Revenue Trend")
 daily_revenue = sales_df.groupby("Date")["Weekly_Sales"].sum().reset_index()
 fig1 = px.line(daily_revenue, x="Date", y="Weekly_Sales", title="Actual Revenue Over Time")
 st.plotly_chart(fig1)
 
-# Forecast
 st.subheader("🔮 Forecast for Next 30 Days")
 fig2 = px.line(forecast_df, x="ds", y="yhat", title="Forecasted Revenue")
 fig2.add_scatter(x=forecast_df['ds'], y=forecast_df['yhat_upper'], mode='lines', name='Upper Bound')
